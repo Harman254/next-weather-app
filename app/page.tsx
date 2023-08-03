@@ -5,7 +5,39 @@ import React, {useState} from 'react'
 import Input from "./components/Input"
 import Weekforecast from './components/Weekforecast';
 import Current from './components/Current';
-import Details from './components/details';
+import Details from './components/Details';
+
+interface WeatherData {
+  
+  location: {
+    name: string;
+    region: string;
+    country: string;
+    localtime: string;
+  };
+  current: {
+    temp_c: number;
+    condition: {
+      text: string;
+      icon: string;
+    };
+  };
+  forecast: {
+    forecastday: {
+      date: string;
+      day: {
+        maxtemp_c: number;
+        mintemp_c: number;
+        condition: {
+          text: string;
+          icon: string;
+        };
+      };
+    }[];
+  };
+  
+}
+
 
 export default function Home() {
   const [data, setData] = useState({});
@@ -37,28 +69,30 @@ const handleSearch = async(e: React.KeyboardEvent<HTMLInputElement>) => {
     let content;
     if (Object.keys(data).length === 0 && error === "") {
       content = (
-        <div>
-          <h2>Welcome to Weather app</h2>
+        <div className='text-white text-center h-screen mt-[5rem]'>
+          <h2 className='text-3xl font-bold mb-4'>Welcome to Weather app</h2>
+          <p className='text-3xl'>Enter a City name to get the Weather Forecast</p>
         </div>
       );
     } else if (error !== "") {
       content = (
-        <div>
-          <p>City not found</p>
-          <p>Enter a valid city</p>
+        <div className='text-white text-center h-screen mt-[5rem]' >
+          <p className='text-3xl font-bold mb-4'>City not found</p>
+          <p className='text-xl'>Enter a valid city</p>
         </div>
       )
     } else {
       content= (
         <>
-        <div>
-          <Weekforecast />
-          <Current />
+        <div className='flex md:flex-row flex-col p-12 items-center justify-between '>
+          
+          <Current data={data} />
+          <Weekforecast data={data}/>
           
 
         </div>
         <div>
-          <Details />
+          <Details data={data}/>
 
         </div>
         </>
@@ -66,7 +100,7 @@ const handleSearch = async(e: React.KeyboardEvent<HTMLInputElement>) => {
     }
 
   return (
-    <div className="bg-cover bg-gradient-to-r from-blue-500 to-blue-300 h-screen">
+    <div className="bg-cover bg-gradient-to-r from-blue-500 to-blue-300 h-fit">
       <div className="bg-white/25 w-full flex flex-col h-fit">
         {/*input and logo*/}
         <div className="flex flex-col justify-between items-center p-12 md:flex-row">
